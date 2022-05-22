@@ -1,4 +1,4 @@
-# Windows-Batch-Script -firat mix
+firat mix specs
 
 echo (1) Temporary Files Cleaning
 echo (2) Downloader
