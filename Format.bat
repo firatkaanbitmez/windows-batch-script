@@ -210,7 +210,7 @@ powershell.exe -command "winget install --silent --accept-package-agreements --a
 
 powershell.exe -command "winget install --silent --accept-package-agreements --accept-source-agreements --id Logitech.OptionsPlus"
 powershell.exe -command "winget install --silent --accept-package-agreements --accept-source-agreements --id 9P1TBXR6QDCX"
-powershell.exe -command "winget install --silent --accept-package-agreements --accept-source-agreements --id AnyDeskSoftwareGmbH.AnyDesk"
+powershell.exe -command "winget install --silent --accept-package-agreements --accept-source-agreements --id Brave.Brave"
 
 
 echo three >%~dp0current.txt
