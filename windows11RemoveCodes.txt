@@ -1,0 +1,67 @@
+3D Viewer
+Get-AppxPackage *Microsoft3DViewer* | Remove-AppxPackage
+3D Builder
+Get-AppxPackage *Microsoft.3DBuilder* | Remove-AppxPackage
+Alarm ve Saat
+Get-AppxPackage *WindowsAlarms* | Remove-AppxPackage
+Hesap Makinesi
+Get-AppxPackage *Microsoft.WindowsCalculator* | Remove-AppxPackage
+Takvim ve Posta
+Get-AppxPackage *windowscommunicationsapps* | Remove-AppxPackage
+Kamera
+Get-AppxPackage *Microsoft.WindowsCamera* | Remove-AppxPackage
+Get Started / Başlarken
+Get-AppxPackage *Microsoft.Getstarted* | Remove-AppxPackage
+Groove Music
+Get-AppxPackage *Microsoft.ZuneMusic* | Remove-AppxPackage
+Music
+Get-AppxPackage *Microsoft.Music.Preview* | Remove-AppxPackage
+Haritalar
+Get-AppxPackage *Microsoft.WindowsMaps* | Remove-AppxPackage
+Filmler ve TV
+Get-AppxPackage *Microsoft.ZuneVideo* | Remove-AppxPackage
+Haberler
+Get-AppxPackage *Microsoft.BingNews* | Remove-AppxPackage
+Office
+Get-AppxPackage *Microsoft.Office.OneNote* | Remove-AppxPackage
+Diğer Office uygulamaları için Office'in kendisini kaldırmak gerekebilir.
+OneDrive
+Get-AppxPackage *Microsoft.OneDrive* | Remove-AppxPackage
+OneNote
+Get-AppxPackage *OneNote* | Remove-AppxPackage
+Paint 3D
+Get-AppxPackage *Microsoft.MSPaint* | Remove-AppxPackage
+People / Kişiler
+Get-AppxPackage *Microsoft.People* | Remove-AppxPackage
+Fotoğraflar
+Get-AppxPackage *Microsoft.Windows.Photos* | Remove-AppxPackage
+Microsoft Store
+Get-AppxPackage *Microsoft.WindowsStore* | Remove-AppxPackage
+Ses Kaydedici
+Get-AppxPackage *Microsoft.SoundRecorder* | Remove-AppxPackage
+Spor
+Get-AppxPackage *Microsoft.BingSports* | Remove-AppxPackage
+Xbox
+Get-AppxPackage *Microsoft.XboxApp* | Remove-AppxPackage
+Xbox Game Callable UI
+Get-AppxPackage *Microsoft.XboxGameCallableUI* | Remove-AppxPackage
+Xbox Identity Provider
+Get-AppxPackage *Microsoft.XboxIdentityProvider* | Remove-AppxPackage
+Bing Travel
+Get-AppxPackage *Microsoft.BingTravel* | Remove-AppxPackage
+Bing Health And Fitness
+Get-AppxPackage *Microsoft.BingHealthAndFitness* | Remove-AppxPackage
+Bing Food And Drink
+Get-AppxPackage *Microsoft.BingFoodAndDrink* | Remove-AppxPackage
+Bing Finance
+Get-AppxPackage *Microsoft.BingFinance* | Remove-AppxPackage
+Microsoft Solitaire Collection
+Get-AppxPackage *Microsoft.MicrosoftSolitaireCollection* | Remove-AppxPackage
+Microsoft Office Hub
+Get-AppxPackage *Microsoft.MicrosoftOfficeHub* | Remove-AppxPackage
+Bing Weather
+Get-AppxPackage *Microsoft.BingWeather* | Remove-AppxPackage
+Bio Enrollment
+Get-AppxPackage *Microsoft.BioEnrollment* | Remove-AppxPackage
+Windows Phone
+Get-AppxPackage *Microsoft.WindowsPhone* | Remove-AppxPackage
