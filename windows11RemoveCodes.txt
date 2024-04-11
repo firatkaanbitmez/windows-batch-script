@@ -65,3 +65,58 @@ Bio Enrollment
 Get-AppxPackage *Microsoft.BioEnrollment* | Remove-AppxPackage
 Windows Phone
 Get-AppxPackage *Microsoft.WindowsPhone* | Remove-AppxPackage
+DevHome 
+Get-AppxPackage *Microsoft.Windows.devhome* | Remove-AppxPackage
+
+
+
+
+#####################################################################
+#####################################################################
+BATCH SCRİPT EKLENECEKLER 
+
+hidden file show cmd
+and extesion
+
+
+gamebar turn off 
+
+winget install --id Git.Git -e --source winget
+
+winget install --id Canva.Canva
+change system locale Turkish ypaamdım
+
+formats turkey(turkish)
+
+
+regional format turkey
+
+
+
+startup kaldır defender edge ilk açılışta başlamasın
+
+
+messenger instahrtam linkedin sildim.
+
+
+
+
+
+LAPTOP YAZISII 
+perofrmans iyileştirmesi için ,VİSUAL EFFECT ayarlarında animation kapattım
+
+
+bing search de kapattım
+
+Show File extension
+Dark Thema ON 
+
+Create Restore Point
+Disable Active History
+
+RECOMMEND SETTİNG Desktop LAptop  MAXPERFORMANCE minimal        Clear 
+
+
+
+
+
