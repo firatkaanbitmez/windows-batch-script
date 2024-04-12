@@ -1,8 +1,6 @@
 
 
 
-if not "%1"=="am_admin" (powershell start -verb runas '%0' am_admin & exit /b) 
-
 
 del /s /f /q “%USERPROFILE%\Local Settings\History”*.*
 rd /s /q “%USERPROFILE%\Local Settings\History”
