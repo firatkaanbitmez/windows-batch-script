@@ -1,0 +1,132 @@
+<#
+  switch_console_debug.ps1
+  - Diagnostic + robust RDP-to-console switcher (only runs when session is Disconnected)
+  - Saves full dumps of query session/qwinsta/quser/query user
+  - Detects numeric session ID and runs tscon <id> /dest:console only when state=Disc
+  - Run as Administrator for reliable results
+#>
+
+param([Parameter(Mandatory=$true)][string]$TargetUser)
+
+$baseDir = "C:\Scripts"
+if (-not (Test-Path $baseDir)) { New-Item -Path $baseDir -ItemType Directory | Out-Null }
+
+$logFile  = Join-Path $baseDir "switch_console_debug.log"
+$dumpFile = Join-Path $baseDir "switch_console_dump.txt"
+
+function Log($m) {
+  $t = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+  "$t  $m" | Out-File -FilePath $logFile -Append -Encoding UTF8
+}
+
+function DumpCommand($name, $cmd) {
+  Log "=== Dump start: $name ==="
+  $out = & $cmd 2>&1
+  "$name OUTPUT:" | Out-File -FilePath $dumpFile -Append -Encoding UTF8
+  $out | Out-File -FilePath $dumpFile -Append -Encoding UTF8
+  Log "=== Dump end: $name (lines: $($out.Count)) ==="
+  return ,$out
+}
+
+Log "===== DEBUG SCRIPT START for user='$TargetUser' ====="
+"Time: $(Get-Date)" | Out-File -FilePath $dumpFile -Append -Encoding UTF8
+"" | Out-File -FilePath $dumpFile -Append -Encoding UTF8
+
+# Collect outputs
+$q1 = DumpCommand "query session" { query session }
+$q2 = DumpCommand "qwinsta"       { qwinsta }
+$q3 = DumpCommand "quser"         { quser }
+$q4 = DumpCommand "query user"    { query user }
+
+$allLines = @()
+$allLines += $q1 + $q2 + $q3 + $q4
+
+# Helper to extract numeric ID
+function TryExtractId($line, $user) {
+  if (-not $line -or $line -notmatch [regex]::Escape($user)) { return $null }
+  $s = $line.Trim()
+
+  if ($s -match '^(rdp-tcp[#\d]*\S*)\s+(\S+)\s+(\d{1,4})\s+(Active|Disc)\b') {
+    return @{ Id=$matches[3]; Session=$matches[1]; State=$matches[4]; Raw=$s }
+  }
+  if ($s -match '(\d{1,4})\s+(Active|Disc)\b') {
+    return @{ Id=$matches[1]; Session="(unknown)"; State=$matches[2]; Raw=$s }
+  }
+  $nums = [regex]::Matches($s, '\d+')
+  foreach ($n in $nums) {
+    $val = [int]$n.Value
+    if ($val -ge 1 -and $val -le 1024) {
+      return @{ Id = $val.ToString(); Session="(fuzzy)"; State="Unknown"; Raw=$s }
+    }
+  }
+  return $null
+}
+
+# --- Find best candidate line ---
+$found = $null
+
+# 1️⃣ Prefer 'Disc'
+foreach ($line in $allLines) {
+  if ($line -match '\bDisc\b' -and $line -match [regex]::Escape($TargetUser)) {
+    $try = TryExtractId $line $TargetUser
+    if ($try) { $found = $try; break }
+  }
+}
+
+# 2️⃣ If none found, prefer 'Active'
+if (-not $found) {
+  foreach ($line in $allLines) {
+    if ($line -match '\bActive\b' -and $line -match [regex]::Escape($TargetUser)) {
+      $try = TryExtractId $line $TargetUser
+      if ($try) { $found = $try; break }
+    }
+  }
+}
+
+# 3️⃣ Fallback: any line containing user
+if (-not $found) {
+  foreach ($line in $allLines) {
+    if ($line -match [regex]::Escape($TargetUser)) {
+      $try = TryExtractId $line $TargetUser
+      if ($try) { $found = $try; break }
+    }
+  }
+}
+
+# --- Exit if nothing found ---
+if (-not $found) {
+  Log "No candidate session line matched. Dump written to $dumpFile. Exiting."
+  Write-Output "NO_ID"
+  exit 0
+}
+
+$id = $found.Id
+Log "Candidate found -> ID=$id, Session=$($found.Session), State=$($found.State)"
+"Selected: ID=$id;Session=$($found.Session);State=$($found.State);Raw=$($found.Raw)" | Out-File -FilePath $dumpFile -Append -Encoding UTF8
+
+# --- Only proceed if session is Disconnected ---
+if ($found.State -ne "Disc") {
+  Log "Session not in Disc state (state=$($found.State)). Skipping tscon."
+  "SKIPPED: Session=$($found.Session);State=$($found.State)" | Out-File -FilePath $dumpFile -Append -Encoding UTF8
+  Log "===== DEBUG SCRIPT END (NO ACTION) ====="
+  exit 0
+}
+
+# --- Run tscon ---
+if ($id -match '^\d+$') {
+  try {
+    Log "Running tscon $id /dest:console ..."
+    Start-Process -FilePath "tscon.exe" -ArgumentList "$id /dest:console" -Wait -NoNewWindow
+    Log "tscon succeeded for session $id."
+    "tscon OK: $id" | Out-File -FilePath $dumpFile -Append -Encoding UTF8
+  } catch {
+    Log "tscon exception: $($_.Exception.Message)"
+    "tscon ERROR: $($_.Exception.Message)" | Out-File -FilePath $dumpFile -Append -Encoding UTF8
+  }
+} else {
+  Log "Extracted id was not numeric ('$id'). Exiting."
+  "EXTRACTED NON-NUMERIC ID: $id" | Out-File -FilePath $dumpFile -Append -Encoding UTF8
+}
+
+Log "===== DEBUG SCRIPT END ====="
+Write-Output "DONE"
